@@ -1,0 +1,49 @@
+var THREE = THREE || {};
+
+THREE.CustomGridHelper = function(cellX, cellY, step, color) {
+
+    step = step || 1;
+    var sizeX = (cellX || 10) * step,
+    sizeY = (cellY || 10) * step;
+    color = new THREE.Color(color !== undefined ? color : 0x444444);
+
+    var vertices = [], colors = [];
+
+    for (var i = 0, j = 0; i <= sizeX; i += step) {
+
+        vertices.push(
+            0, 0, -i,
+            -sizeY, 0, -i
+        );
+
+        color.toArray(colors, j); j += 3;
+        color.toArray(colors, j); j += 3;
+        color.toArray(colors, j); j += 3;
+        color.toArray(colors, j); j += 3;
+    }
+
+    for (var i = 0, j = 0; i <= sizeY; i += step) {
+
+        vertices.push(
+            -i, 0, 0,
+            -i, 0, -sizeX
+        );
+
+        color.toArray(colors, j); j += 3;
+        color.toArray(colors, j); j += 3;
+        color.toArray(colors, j); j += 3;
+        color.toArray(colors, j); j += 3;
+    }
+
+    var geometry = new THREE.BufferGeometry();
+    geometry.addAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+    geometry.addAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
+
+    var material = new THREE.LineBasicMaterial({vertexColors: THREE.VertexColors});
+
+    THREE.LineSegments.call(this, geometry, material);
+
+};
+
+THREE.CustomGridHelper.prototype = Object.create(THREE.LineSegments.prototype);
+THREE.CustomGridHelper.prototype.constructor = THREE.CustomGridHelper;
